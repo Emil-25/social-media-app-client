@@ -1,23 +1,29 @@
-import { useRef, useState } from "react"
+import useIntersectionObserver from "@/hooks/useIntersectionObserver"
+import useToggle from "@/hooks/useToggle"
+import { useEffect, useRef, useState } from "react"
 import Comments from "./comments"
 import Content from "./content"
 
 
 export default function Post() {
-    const [hideComments, setHideComments] = useState<Boolean>(true)
-    const postHeight = useRef<HTMLDivElement>(null)
+    const [isHidden, toggleIsHidden, setIsHidden] = useToggle(true)
+    const post = useRef<HTMLDivElement>(null)
+    const height = post.current?.offsetHeight
 
-    const height = postHeight.current?.offsetHeight
+    const postEntry = useIntersectionObserver(post,{})
+    const isVisible = !!postEntry?.isIntersecting
+    useEffect(() => {
+        setIsHidden(true)
+    },[isVisible])    
 
     const handleHideComments = () => {
-        setHideComments(hideComments ? false : true)
-        console.log(postHeight.current?.offsetHeight)
+        toggleIsHidden()
     }
 
     return (
-        <div className="flex flex-row justify-center gap-5" ref={postHeight}>
-            <Content handleHideComments={handleHideComments} />
-            {!hideComments &&
+        <div className="flex flex-row justify-center gap-5 my-5" ref={post}>
+            <Content handleHideComments={handleHideComments} toggleCommentIcon={isVisible}/>
+            {!isHidden &&
                 <Comments size={height!}/>
             }
 

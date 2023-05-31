@@ -1,12 +1,25 @@
-import { MouseEventHandler, MutableRefObject } from 'react'
+import useToggle from '@/hooks/useToggle'
+import { MouseEventHandler, useEffect } from 'react'
 import {AiOutlineHeart, AiFillHeart, AiOutlineShareAlt} from 'react-icons/ai'
 import {BiCommentDetail} from 'react-icons/bi'
 
 interface IProps {
+    toggleCommentIcon: boolean
     handleHideComments: MouseEventHandler<HTMLButtonElement>,
 }
 
 export default function Content(props: IProps) {
+    const [isLiked, toggleIsLiked] = useToggle(false)
+    const [isCommentsOpen, toggleIsCommentsOpen, setIsCommentOpen] = useToggle(false)
+
+    useEffect(() => {
+        setIsCommentOpen(false)
+    }, [props.toggleCommentIcon])
+
+    const handleComments = (event: any) => {
+        props.handleHideComments(event);
+        toggleIsCommentsOpen()
+    }
 
     return (
         <div className="card card-compact w-96 bg-base-100 shadow-xl">
@@ -21,8 +34,12 @@ export default function Content(props: IProps) {
             <figure><img src="https://plus.unsplash.com/premium_photo-1684923610356-001513e75d62?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="Shoes" /></figure>
             <div className="card-body">
                 <div className="card-actions justify-start mb-2">
-                    <button className="btn btn-primary btn-outline"><AiOutlineHeart size='1.5rem'/></button>
-                    <button className="btn btn-accent btn-outline" onClick={props.handleHideComments}><BiCommentDetail size='1.5rem'/></button>
+                    {!isLiked && <button className="btn btn-primary btn-outline" onClick={() => {toggleIsLiked()}}><AiOutlineHeart size='1.5rem'/></button>}
+                    {isLiked && <button className="btn btn-primary" onClick={() => {toggleIsLiked()}}><AiFillHeart size='1.5rem'/></button>}
+
+                    {isCommentsOpen && <button className="btn btn-accent" onClick={handleComments}><BiCommentDetail size='1.5rem'/></button>}
+                    {!isCommentsOpen && <button className="btn btn-accent btn-outline" onClick={handleComments}><BiCommentDetail size='1.5rem'/></button>}
+
                     <button className="btn btn-secondary btn-outline"><AiOutlineShareAlt size='1.5rem'/></button>
                 </div>
                 <h2 className="card-title">Shoes!</h2>

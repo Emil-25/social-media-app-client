@@ -1,6 +1,9 @@
-import { AiOutlineHeart } from "react-icons/ai";
+import useToggle from "@/hooks/useToggle";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 export default function Comment() {
+    const [isLiked, toggleIsLiked] = useToggle(false)
+
     return (
         <div className="card w-96 bg-neutral text-neutral-content">
             <div className="card-body items-start text-center p-2">
@@ -13,8 +16,9 @@ export default function Comment() {
                     <h2 className="card-title text-[0.8rem]">Name!</h2>
                 </div>
                 <p>We are using cookies for no reason.</p>
-                <div className="card-actions justify-end ">
-                    <button className="btn btn-primary btn-outline btn-sm"><AiOutlineHeart size='1rem' /></button>
+                <div className="card-actions ml-auto">
+                {!isLiked && <button className="btn btn-error btn-outline btn-sm" onClick={() => {toggleIsLiked()}}><AiOutlineHeart size='1rem'/></button>}
+                {isLiked && <button className="btn btn-error btn-sm" onClick={() => {toggleIsLiked()}}><AiFillHeart size='1rem'/></button>}
                     <button className="btn btn-ghost btn-sm">Reply</button>
                 </div>
             </div>

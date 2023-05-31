@@ -1,12 +1,10 @@
-import Post from "@/components/post/post";
-
+import SignUp from "@/components/auth/signup";
+import Login from "@/components/auth/login";
 
 export default function Home() {
   return (
     <>
-    <Post/>
-    <Post/>
-    <Post/>
-    <Post/></>
+    <SignUp></SignUp>
+    </>
   );
 }
