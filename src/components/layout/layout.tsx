@@ -10,6 +10,7 @@ export default function Layout({ children }: IProps) {
     return (
         <>
             <Navbar />
+            <div className="w-full h-[72px]"></div>
                 <ProvidersWrapper>
                     {children}
                 </ProvidersWrapper>

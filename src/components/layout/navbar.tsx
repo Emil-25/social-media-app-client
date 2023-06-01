@@ -1,14 +1,46 @@
+import useTheme from "@/hooks/useTheme";
+import { themes } from "@/utils/themes";
+
 export default function Navbar() {
+    const [theme, setTheme] = useTheme('dark')
+
     return (
-        <div className="navbar bg-base-100">
+        <div className="navbar bg-base-100 fixed z-50 top-0">
             <div className="flex-1">
-                <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+                <a className="btn btn-ghost normal-case text-xl text-emerald-300">LimeLink</a>
             </div>
-            <div className="flex-none">
-                <button className="btn btn-square btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-                </button>
+            <div className="flex-none gap-2">
+                <div className="form-control">
+                    <input type="text" placeholder="Search" className="input input-bordered border-primary w-24 md:w-auto" />
+                </div>
+
+                <div className="dropdown dropdown-bottom dropdown-end">
+                    <label tabIndex={0} className="btn m-1 text-accent btn-primary">Theme</label>
+                    <ul tabIndex={0} className="dropdown-content  p-2 shadow bg-base-100 rounded-box h-[40vh] overflow-x-hidden flex flex-col">
+                        {themes.map((theme) => {
+                            return <button className="p-3" onClick={() => {setTheme(theme)}}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</button>
+                        })}
+                    </ul>
+                </div>
+
+                <div className="dropdown dropdown-end">
+                    <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                        <div className="w-10 rounded-full">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" />
+                        </div>
+                    </label>
+                    <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                        <li>
+                            <a className="justify-between">
+                                Profile
+                                <span className="badge">New</span>
+                            </a>
+                        </li>
+                        <li><a>Settings</a></li>
+                        <li><a>Logout</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
+        </div >
     )
 }

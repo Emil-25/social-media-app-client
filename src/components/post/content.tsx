@@ -2,6 +2,7 @@ import useToggle from '@/hooks/useToggle'
 import { MouseEventHandler, useEffect } from 'react'
 import {AiOutlineHeart, AiFillHeart, AiOutlineShareAlt} from 'react-icons/ai'
 import {BiCommentDetail} from 'react-icons/bi'
+import dynamic from 'next/dynamic';
 
 interface IProps {
     toggleCommentIcon: boolean
@@ -11,6 +12,8 @@ interface IProps {
 export default function Content(props: IProps) {
     const [isLiked, toggleIsLiked] = useToggle(false)
     const [isCommentsOpen, toggleIsCommentsOpen, setIsCommentOpen] = useToggle(false)
+
+    const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 
     useEffect(() => {
         setIsCommentOpen(false)
@@ -22,7 +25,7 @@ export default function Content(props: IProps) {
     }
 
     return (
-        <div className="card card-compact w-96 bg-base-100 shadow-xl">
+        <div className="card card-compact w-auto bg-base-100 shadow-xl">
             <div className="card-body flex flex-row gap-5">
                 <div className="avatar">
                     <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -31,7 +34,13 @@ export default function Content(props: IProps) {
                 </div>
                 <h2 className="card-title text-[1.2rem]">Name!</h2>
             </div>
-            <figure><img src="https://plus.unsplash.com/premium_photo-1684923610356-001513e75d62?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="Shoes" /></figure>
+
+            <figure>
+                <img src="https://images.unsplash.com/photo-1502790671504-542ad42d5189?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Shoes" />
+                {/* <ReactPlayer url='https://youtu.be/2QmNLIsQ1l8' /> */}
+            </figure>
+
+
             <div className="card-body">
                 <div className="card-actions justify-start mb-2">
                     {!isLiked && <button className="btn btn-primary btn-outline" onClick={() => {toggleIsLiked()}}><AiOutlineHeart size='1.5rem'/></button>}
