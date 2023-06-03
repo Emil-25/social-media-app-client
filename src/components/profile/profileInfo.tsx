@@ -51,9 +51,9 @@ export default function ProfileInfo() {
                     </div>
                     <h2 className="card-title">Email:</h2> <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                     <h2 className="card-title">Interests:</h2> <input type="text" value={interests} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-                    <h2 className="card-title">About:</h2> <input type="text" value={about} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                    <h2 className="card-title">About:</h2> <textarea className="textarea textarea-bordered" placeholder="Bio"></textarea>
 
-                    <button className="btn btn-primary w-full">Save</button>
+                    <button className="btn btn-primary w-full" type='submit'>Save</button>
                     <button className="btn btn-ghost w-full" onClick={() => {setEdit(false)}}>Cancel</button>
                 </div>
             </form>}

@@ -32,7 +32,7 @@ export default function Content(props: IProps) {
                         <img src="https://images.unsplash.com/photo-1685371863474-90594391bc95?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" />
                     </div>
                 </div>
-                <h2 className="card-title text-[1.2rem]">Name!</h2>
+                <h2 className="card-title text-[1.2rem]">Profile Name!</h2>
             </div>
 
             <figure>

@@ -22,6 +22,7 @@ export default function Navbar() {
                         })}
                     </ul>
                 </div>
+                <label htmlFor="my_modal_6" className="btn">Add Post</label>
 
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
