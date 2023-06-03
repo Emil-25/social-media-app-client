@@ -18,7 +18,7 @@ export default function Navbar() {
                     <label tabIndex={0} className="btn m-1 text-accent btn-primary">Theme</label>
                     <ul tabIndex={0} className="dropdown-content  p-2 shadow bg-base-100 rounded-box h-[40vh] overflow-x-hidden flex flex-col">
                         {themes.map((theme) => {
-                            return <button className="p-3" onClick={() => {setTheme(theme)}}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</button>
+                            return <button className="p-3" key={theme} onClick={() => {setTheme(theme)}}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</button>
                         })}
                     </ul>
                 </div>

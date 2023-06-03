@@ -1,6 +1,17 @@
+import Follower from "./follower";
+
 
 export default function Followers() {
   return (
-    <div>F</div>
+    <>
+    <Follower />
+    <Follower />
+    <Follower />
+    <Follower />
+    <Follower />
+    <Follower />
+    <Follower />
+    <Follower />
+    </>
   )
 }
