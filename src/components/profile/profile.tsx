@@ -13,6 +13,7 @@ export default function Profile() {
             <ProfileInfo />
                 <div className="tabs tabs-boxed justify-center">
                     <a className="tab tab-lg tab-active" onClick={handleTab}>Followers</a>
+                    <a className="tab tab-lg" onClick={handleTab}>Posts</a>
                     <a className="tab tab-lg" onClick={handleTab}>Following</a>
                 </div>
             <Followers />
