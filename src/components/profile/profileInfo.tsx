@@ -9,7 +9,7 @@ export default function ProfileInfo() {
 
     const [edit, setEdit] = useState(false)
 
-    const handleProfilePicture = (event: ChangeEvent<HTMLInputElement>) => {
+    const handlePreview = (event: ChangeEvent<HTMLInputElement>) => {
         setPreview(URL.createObjectURL(event.target.files![0]))
     }
 
@@ -45,7 +45,7 @@ export default function ProfileInfo() {
                         <div className="card-body">
                             <div className="card-actions justify-start">
                                 <h2 className="card-title">Change Profile Picture:</h2>
-                                <input type="file" accept='.jpg, .gif, .png' onChange={handleProfilePicture} className="file-input file-input-bordered file-input-primary w-full max-w-xs file-input-sm" />
+                                <input type="file" accept='.jpg, .gif, .png' onChange={handlePreview} className="file-input file-input-bordered file-input-primary w-full max-w-xs file-input-sm" />
                             </div>
                         </div>
                     </div>
