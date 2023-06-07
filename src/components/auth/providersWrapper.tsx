@@ -5,6 +5,8 @@ export default function ProvidersWrapper({
 }: {
   children: React.ReactNode
 }) {
+
+    
   return (
     <SessionProvider>
         {children} {/* Our entire app -> has access to NextAuth */}

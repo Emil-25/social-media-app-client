@@ -1,16 +1,17 @@
 import Layout from '../components/layout/layout';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { setAuthToken } from '@/utils/setAuthToken';
+import UserProvider from '@/context/userContext';
+import ProvidersWrapper from '@/components/auth/providersWrapper';
 
 export default function App({ Component, pageProps }: AppProps) {
-    const token = localStorage.getItem("token");
-    if (token) {
-        setAuthToken(token);
-    }
   return (
-    <Layout>
-        <Component {...pageProps} />
-    </Layout>
+    <UserProvider>
+        <ProvidersWrapper>
+            <Layout>
+                <Component {...pageProps} />
+            </Layout>
+        </ProvidersWrapper>
+    </UserProvider>
   );
 }
