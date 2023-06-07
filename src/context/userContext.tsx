@@ -51,7 +51,6 @@ export default function UserProvider({children}:any) {
 
     }
 
-
     useEffect(() => {
         if (token) {
             fetchUser()

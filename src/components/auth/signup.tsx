@@ -20,14 +20,17 @@ interface IFormInput {
 export default function SignUp() {
     const [isHidden, toggleIsHidden] = useToggle(true);
 
-    const { register, formState: { errors }, handleSubmit } = useForm<IFormInput>();
+    const { register, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-        await axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/auth/signup`, data)
-            .then(({data}) => {
+            axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/auth/signup`, data)
+            .then(({ data }) => {
+                console.log(data.token)
                 setAuthToken(data.token); 
                 localStorage.setItem("token", data.token)
             })
-            .catch(err => {console.log(err)})
+            .catch(err => {
+                setError("email", { type: "inUse" }, { shouldFocus: true });
+            })
     };
 
     const password = useRef<HTMLDivElement>(null)
@@ -88,6 +91,7 @@ export default function SignUp() {
                         />
                         {errors.email?.type === 'required' && <p role="alert" className="text-error mt-1">*Email is required</p>}
                         {errors.email?.type === 'pattern' && <p role="alert" className="text-error mt-1">*Please enter a proper email</p>}
+                        {errors.email?.type === 'inUse' && <p role="alert" className="text-error mt-1">*Email already on use</p>}
                     </div>
 
                     <div className="form-control w-full max-w-xs">
