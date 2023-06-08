@@ -1,5 +1,5 @@
 import useToggle from "@/hooks/useToggle";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm, SubmitHandler  } from "react-hook-form";
 import { setAuthToken } from '../../utils/setAuthToken';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
@@ -21,15 +21,19 @@ export default function SignUp() {
     const [isHidden, toggleIsHidden] = useToggle(true);
 
     const { register, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
+    const [invalid, setInvalid] = useState("")
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
             axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/auth/signup`, data)
             .then(({ data }) => {
-                console.log(data.token)
                 setAuthToken(data.token); 
                 localStorage.setItem("token", data.token)
             })
             .catch(err => {
                 setError("email", { type: "inUse" }, { shouldFocus: true });
+                if (!err.response) {
+                    setError("agree", { type: "invalid" }, { shouldFocus: true });
+                    return setInvalid("Cannot connect to server, Sorry for inconvenience")
+                }
             })
     };
 
@@ -139,7 +143,7 @@ export default function SignUp() {
                         {errors.agree?.type === 'required' && <p role="alert" className="text-error mt-1">*Accept Terms and Conditions</p>}
 
                     </div>
-
+                    {errors.agree?.type === 'required' && <p role="alert" className="text-error mt-1">*Accept Terms and Conditions</p>}
                     <button type="submit" className="btn btn-primary btn-wide mt-[1.3rem]">Sign Up</button>
 
                 </form>

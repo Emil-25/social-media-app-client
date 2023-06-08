@@ -3,6 +3,7 @@ import { setAuthToken } from "@/utils/setAuthToken";
 import axios from "axios";
 
 interface User {
+    avatar: string | null,
     fullName: string | null,
     email: string | null,
     interests: string | null,
@@ -12,6 +13,7 @@ interface User {
 const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<User>>]>(
     [
         {
+            avatar: null,
             fullName: null,
             email: null,
             interests: null,
@@ -21,12 +23,13 @@ const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<Use
     ]
 )
 
-export default function UserProvider({children}:any) {
+function UserProvider({children}:any) {
     const [user, setUser] = useState<User>({
+        avatar: null,
         fullName: null,
         email: null,
         interests: null,
-        bio: null,
+        bio: null
     })
 
     if (typeof window !== 'undefined') {
@@ -41,6 +44,7 @@ export default function UserProvider({children}:any) {
         await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/me`)
         .then(({ data }) => {
             setUser({
+                avatar: data.avatar,
                 fullName: data.fullName,
                 email: data.email,
                 interests: data.interests,
@@ -57,6 +61,7 @@ export default function UserProvider({children}:any) {
         }
         else {
             setUser({
+                avatar: null,
                 fullName: null,
                 email: null,
                 interests: null,
@@ -73,4 +78,6 @@ export default function UserProvider({children}:any) {
         </UserContext.Provider>
     )
 }
+
+export {UserProvider, UserContext};
 

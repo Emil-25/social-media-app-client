@@ -10,7 +10,6 @@ import PostForm from "@/components/post/postForm";
 
 export default function Home() {
   return (
-    <PostForm />
-
+    <Profile />
   );
 }

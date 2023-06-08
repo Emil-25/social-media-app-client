@@ -1,10 +1,12 @@
 import useToggle from "@/hooks/useToggle";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useSession, signIn } from "next-auth/react";
 import logo from "../../images/LimeLink_logo.png";
+import axios from "axios";
+import { setAuthToken } from "@/utils/setAuthToken";
 
 interface IFormInput {
     email: String,
@@ -14,10 +16,22 @@ interface IFormInput {
 export default function LogIn() {
     const [isHidden, toggleIsHidden] = useToggle(true);
 
-    const { register, formState: { errors }, handleSubmit } = useForm<IFormInput>();
-    const onSubmit: SubmitHandler<IFormInput> = data => {
-        
-    };
+    const { register, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
+    const [invalid, setInvalid] = useState("")
+    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+        axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/auth/login`, data)
+        .then(({ data }) => {
+            setAuthToken(data.token); 
+            localStorage.setItem("token", data.token)
+        })
+        .catch(err => {
+            setError("password", { type: "invalid" }, { shouldFocus: true });
+            if (!err.response) {
+                return setInvalid("Cannot connect to server, Sorry for inconvenience")
+            }
+            setInvalid(err.response.data)
+        })
+};
 
     const password = useRef<HTMLDivElement>(null)
 
@@ -71,6 +85,7 @@ export default function LogIn() {
                             {isHidden && <span className="absolute translate-x-[-2.3rem] translate-y-[.8rem]" onClick={handlePasswordType}><AiFillEyeInvisible size='1.5rem' /></span>}
 
                             {errors.password?.type === 'required' && <p role="alert" className="text-error mt-1">*Password is required</p>}
+                            {errors.password?.type === 'invalid' && <p role="alert" className="text-error mt-1">*{invalid}</p>}
                         </div>
                     </div>
 
