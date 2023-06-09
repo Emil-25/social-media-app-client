@@ -6,7 +6,6 @@ import { UserContext } from '@/context/userContext';
 
 
 interface IFormInput {
-    file: any;
     avatar: String,
     fullName: String,
     interests: String,
@@ -18,8 +17,12 @@ export default function ProfileInfo() {
     const [profilePicture, setProfilePicture] = useState(profile.src)
     const { register, watch, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-        await axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/users/me`,
-            { ...data, avatar: data.avatar[0] },
+
+        const rawInterests = data.interests.split(',');
+        const interests = rawInterests.map((str) => str.trim())
+        
+        await axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/users/test`,
+            { ...data, avatar: data.avatar[0], interests },
             {
                 headers: {
                     'Content-Type': 'multipart/form-data'
