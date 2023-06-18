@@ -1,10 +1,12 @@
 import useToggle from "@/hooks/useToggle";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { useForm, SubmitHandler  } from "react-hook-form";
 import { setAuthToken } from '../../utils/setAuthToken';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useSession, signIn } from "next-auth/react";
+import { useRouter } from 'next/router';
 import logo from "../../images/LimeLink_logo.png";
 import axios from "axios";
 
@@ -19,7 +21,7 @@ interface IFormInput {
 
 export default function SignUp() {
     const [isHidden, toggleIsHidden] = useToggle(true);
-
+    const router = useRouter();
     const { register, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
     const [invalid, setInvalid] = useState("")
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -27,9 +29,11 @@ export default function SignUp() {
             .then(({ data }) => {
                 setAuthToken(data.token); 
                 localStorage.setItem("token", data.token)
+                router.push('/')
             })
             .catch(err => {
                 setError("email", { type: "inUse" }, { shouldFocus: true });
+                console.log(err)
                 if (!err.response) {
                     setError("agree", { type: "invalid" }, { shouldFocus: true });
                     return setInvalid("Cannot connect to server, Sorry for inconvenience")
@@ -61,7 +65,7 @@ export default function SignUp() {
                     <div className="card-body flex flex-col items-center">
                         <img src={logo.src} alt="Logo" className="w-[80px] h-[50px] rounded-xl" />
                         <h2 className="card-title text-white text-[1.5rem]">Sign Up to LimeLink!</h2>
-                        <p className="text-white">If you have an account, <a href="" className="text-primary">Login</a>.</p>
+                        <p className="text-white">If you have an account, <Link href="/login" className="text-primary">Login</Link>.</p>
                     </div>
                 </div>
 
@@ -95,7 +99,7 @@ export default function SignUp() {
                         />
                         {errors.email?.type === 'required' && <p role="alert" className="text-error mt-1">*Email is required</p>}
                         {errors.email?.type === 'pattern' && <p role="alert" className="text-error mt-1">*Please enter a proper email</p>}
-                        {errors.email?.type === 'inUse' && <p role="alert" className="text-error mt-1">*Email already on use</p>}
+                        {errors.email?.type === 'inUse' && <p role="alert" className="text-error mt-1">*Email already in use</p>}
                     </div>
 
                     <div className="form-control w-full max-w-xs">
@@ -152,3 +156,4 @@ export default function SignUp() {
         </section>
     )
 }
+

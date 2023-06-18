@@ -1,7 +1,10 @@
 import LogIn from "@/components/auth/login"
+import { LoggedRoute } from "@/components/protectedRoute"
 
-export default function Login() {
+function Login() {
   return (
     <LogIn />
   )
 }
+
+export default LoggedRoute(Login)

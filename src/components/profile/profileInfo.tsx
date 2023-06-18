@@ -4,24 +4,23 @@ import { SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import axios from 'axios';
 import { UserContext } from '@/context/userContext';
 
-
 interface IFormInput {
-    avatar: String,
-    fullName: String,
-    interests: String,
-    bio: String
+    avatar: string,
+    fullName: string,
+    interests: string,
+    bio: string
 }
 
 export default function ProfileInfo() {
-    const [preview, setPreview] = useState(profile.src)
-    const [profilePicture, setProfilePicture] = useState(profile.src)
+    const [user, setUser] = useContext(UserContext)
+    const [profilePicture, setProfilePicture] = useState(user.avatar? user.avatar : profile.src)
     const { register, watch, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 
         const rawInterests = data.interests.split(',');
         const interests = rawInterests.map((str) => str.trim())
         
-        await axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as String}/users/test`,
+        await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/users/me`,
             { ...data, avatar: data.avatar[0], interests },
             {
                 headers: {
@@ -42,12 +41,12 @@ export default function ProfileInfo() {
     useEffect(() => {
         if (edit) {
             const avatarFile: any = watchedAvatar[0]
-            setPreview(URL.createObjectURL(avatarFile))
+            setProfilePicture(URL.createObjectURL(avatarFile))
         }
+        console.log(profilePicture)
     }, [watchedAvatar])
 
 
-    const [user, setUser] = useContext(UserContext)
     const [edit, setEdit] = useState(false)
 
     return (
@@ -74,9 +73,9 @@ export default function ProfileInfo() {
 
             {edit && <form action="" method="post" encType='multipart/form-data' onSubmit={handleSubmit(onSubmit)} className="hero-content flex-col lg:flex-row">
                 <div className='flex flex-col gap-5'>
-                    <h1 className="text-5xl font-bold">Profile Name</h1>
+                    <h1 className="text-5xl font-bold">{user.fullName}</h1>
                     <div className="card card-compact w-96 bg-base-100 shadow-xl">
-                        <figure><img src={preview} alt="Profile Picture" /></figure>
+                        <figure><img src={profilePicture} alt="Profile Picture" /></figure>
                         <div className="card-body">
                             <div className="card-actions justify-start">
                                 <h2 className="card-title">Change Profile Picture:</h2>
@@ -91,6 +90,7 @@ export default function ProfileInfo() {
                     <h2 className="card-title">Fullname:</h2>
                     <input type="text"
                         placeholder={user.fullName!}
+                        defaultValue={user.fullName!}
                         className="input input-bordered w-full max-w-xs"
                         {...register("fullName", { required: true, minLength: 3, pattern: /^$|^[a-zA-ZčČćĆđĐšŠžŽ-]+ [a-zA-ZčČćĆđĐšŠžŽ-]+$/, maxLength: 30 })}
                     />
@@ -113,7 +113,7 @@ export default function ProfileInfo() {
                     </textarea>
 
                     <button className="btn btn-primary w-full" type='submit'>Save</button>
-                    <button className="btn btn-ghost w-full" onClick={() => { setEdit(false); setPreview(profile.src) }}>Cancel</button>
+                    <button className="btn btn-ghost w-full" onClick={() => { setEdit(false); setProfilePicture(user.avatar? user.avatar : profile.src) }}>Cancel</button>
                 </div>
             </form>}
         </div>

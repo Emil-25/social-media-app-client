@@ -1,4 +1,5 @@
 import useToggle from "@/hooks/useToggle";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
@@ -7,6 +8,7 @@ import { useSession, signIn } from "next-auth/react";
 import logo from "../../images/LimeLink_logo.png";
 import axios from "axios";
 import { setAuthToken } from "@/utils/setAuthToken";
+import { useRouter } from 'next/router';
 
 interface IFormInput {
     email: String,
@@ -15,7 +17,7 @@ interface IFormInput {
 
 export default function LogIn() {
     const [isHidden, toggleIsHidden] = useToggle(true);
-
+    const router = useRouter();
     const { register, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
     const [invalid, setInvalid] = useState("")
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -23,6 +25,7 @@ export default function LogIn() {
         .then(({ data }) => {
             setAuthToken(data.token); 
             localStorage.setItem("token", data.token)
+            router.push('/')
         })
         .catch(err => {
             setError("password", { type: "invalid" }, { shouldFocus: true });
@@ -51,7 +54,7 @@ export default function LogIn() {
                     <div className="card-body flex flex-col items-center">
                         <img src={logo.src} alt="Logo" className="w-[80px] h-[50px] rounded-xl"/>
                         <h2 className="card-title text-white text-[1.5rem]">Login to LimeLink!</h2>
-                        <p className="text-white">If you don't have an account, <a href="" className="text-primary">Signup</a>.</p>
+                        <p className="text-white">If you don't have an account, <Link href="/signup" className="text-primary">Signup</Link>.</p>
                     </div>
                 </div>
 
@@ -98,3 +101,4 @@ export default function LogIn() {
         </section>
     )
 }
+

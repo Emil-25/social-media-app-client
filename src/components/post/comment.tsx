@@ -1,8 +1,27 @@
 import useToggle from "@/hooks/useToggle";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import User from '../../types/user';
+import Post from '../../types/post';
+import profile from '../../images/blank_profile.png';
+import axios from "axios";
+import Comment from "@/types/comment";
 
-export default function Comment() {
+interface IProps {
+    user: User,
+    comment: Comment
+}
+
+export default function Comment(props: IProps) {
     const [isLiked, toggleIsLiked] = useToggle(false)
+
+    const handleLike = () => {
+        toggleIsLiked()
+        axios.get(`/likes/comments/add/${props.comment.id}`)
+    }
+    const handleUnLike = () => {
+        toggleIsLiked()
+        axios.get(`/likes/comments/remove/${props.comment.id}`)
+    }
 
     return (
         <div className="card w-96 bg-neutral text-neutral-content">
@@ -10,16 +29,15 @@ export default function Comment() {
                 <div className="flex flex-row gap-3">
                     <div className="avatar">
                         <div className="w-8 rounded-full">
-                            <img src="https://images.unsplash.com/photo-1685287919399-4d1fdf52388e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80" />
+                            {props.user.avatar && <img src={props.user.avatar} alt='Profile Picture'/> || <img src={profile.src} alt='Profile Picture'/> }
                         </div>
                     </div>
-                    <h2 className="card-title text-[0.8rem]">Name!</h2>
+                    <h2 className="card-title text-[0.8rem]">{props.user.fullname}</h2>
                 </div>
-                <p>We are using cookies for no reason.</p>
+                <p>{props.comment.comment}</p>
                 <div className="card-actions ml-auto">
-                {!isLiked && <button className="btn btn-error btn-outline btn-sm" onClick={() => {toggleIsLiked()}}><AiOutlineHeart size='1rem'/></button>}
-                {isLiked && <button className="btn btn-error btn-sm" onClick={() => {toggleIsLiked()}}><AiFillHeart size='1rem'/></button>}
-                    <button className="btn btn-ghost btn-sm">Reply</button>
+                {!isLiked && <button className="btn btn-error btn-outline btn-sm"onClick={handleLike}><AiOutlineHeart size='1rem'/></button>}
+                {isLiked && <button className="btn btn-error btn-sm" onClick={handleUnLike}><AiFillHeart size='1rem'/></button>}
                 </div>
             </div>
         </div>

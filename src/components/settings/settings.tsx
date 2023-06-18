@@ -1,5 +1,15 @@
+import axios from "axios"
+import { useRef } from "react"
 
 export default function Settings() {
+    const privateAccount = useRef<HTMLInputElement>(null)
+
+    const handlePrivateAccount = async () => {
+        const data = privateAccount.current!.value
+        await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/users/me`,
+            { data }
+        ).catch(err=>console.log(err))
+    }
 
     return (
         <section className="h-[90vh] p-3">
@@ -8,7 +18,7 @@ export default function Settings() {
                 <div className="card-body flex flex-row">
                     <h2 className="card-title">Private account (No one will see your content unless they follow you)</h2>
                     <div className="card-actions place-content-center justify-center">
-                        <input type="checkbox" className="toggle toggle-primary ml-5" />
+                        <input type="checkbox" ref={privateAccount} onClick={handlePrivateAccount} className="toggle toggle-primary ml-5" />
                     </div>
                     <button className="btn btn-primary ml-auto">Save</button>
                 </div>
