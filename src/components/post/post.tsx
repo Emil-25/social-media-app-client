@@ -30,7 +30,9 @@ export default function Post(props: IProps) {
         <div className="flex flex-row justify-center gap-5 my-5" ref={post}>
             <Content handleHideComments={handleHideComments} toggleCommentIcon={isVisible} post={props.post}/>
             {!isHidden &&
-                <Comments size={height!} post={props.post}/>
+                <div className="flex justify-center items-center">
+                    <Comments size={height!} post={props.post}/>
+                </div>
             }
 
         </div>

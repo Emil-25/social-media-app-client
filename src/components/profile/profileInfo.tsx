@@ -3,25 +3,68 @@ import profile from '../../images/blank_profile.png';
 import { SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import axios from 'axios';
 import { UserContext } from '@/context/userContext';
+import { useRouter } from 'next/router'
 
 interface IFormInput {
-    avatar: string,
-    fullName: string,
-    interests: string,
-    bio: string
+    avatar: string | null,
+    fullName: string | null,
+    interests: string | null,
+    bio: string | null
 }
 
-export default function ProfileInfo() {
-    const [user, setUser] = useContext(UserContext)
-    const [profilePicture, setProfilePicture] = useState(user.avatar? user.avatar : profile.src)
-    const { register, watch, setError, formState: { errors }, handleSubmit } = useForm<IFormInput>();
-    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+interface IProps {
+    userId: number,
+    isMain: boolean
+}
 
-        const rawInterests = data.interests.split(',');
+interface User {
+    id: number | null,
+    avatar: string | null,
+    fullName: string | null,
+    email: string | null,
+    interests: string | null,
+    bio: string | null,
+  }
+
+export default function ProfileInfo(props: IProps) {
+    const [user, setUser] = useContext(UserContext);
+    const router = useRouter()
+    const [otherUser, setOtherUser] = useState<User>({
+        id: null,
+        avatar: null,
+        fullName: null,
+        email: null,
+        interests: null,
+        bio: null
+    });
+    const [profilePicture, setProfilePicture] = useState(user.avatar? `${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/${user.avatar}` : profile.src)
+
+    useEffect(() => {
+        setProfilePicture(user.avatar? `${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/${user.avatar}` : profile.src)
+    }, [user.avatar])
+
+    const defaultFormData = {
+        avatar: user.avatar,
+        fullName: user.fullName,
+        interests: user.interests? user.interests : ' ',
+        bio: user.bio? user.bio : 'I Love LimeLink!'
+    }
+    const { register, watch, setError, formState: { errors }, handleSubmit, reset } = useForm<IFormInput>({
+        defaultValues: defaultFormData
+    });
+    
+    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+        const rawInterests = (data.interests! as string).split(' ');
         const interests = rawInterests.map((str) => str.trim())
+
+        let postData = {...data, interests}
+
+        if (data.avatar) {
+            postData = {...postData, avatar: data.avatar![0]}
+        }
         
         await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/users/me`,
-            { ...data, avatar: data.avatar[0], interests },
+            postData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -34,40 +77,59 @@ export default function ProfileInfo() {
                 interests: data.interests,
                 bio: data.bio
             })
-        }).catch(err=>console.log(err))
+            router.reload()
+        }).catch(err=>{console.log(err); alert(err.response.data)})
     };
+
     const watchedAvatar = watch("avatar")
 
     useEffect(() => {
-        if (edit) {
-            const avatarFile: any = watchedAvatar[0]
+        if (edit && watchedAvatar![0] != 'u') {
+            const avatarFile: any = watchedAvatar![0]
+            console.log(avatarFile, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
             setProfilePicture(URL.createObjectURL(avatarFile))
         }
-        console.log(profilePicture)
+
     }, [watchedAvatar])
 
+    useEffect(() => {
+        if (!props.isMain) {
+            axios.get(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/users/${props.userId}`)
+                .then(({ data }) => {
+                    setOtherUser({
+                        id: data.userWithoutPassword.id,
+                        avatar: data.userWithoutPassword.avatar,
+                        fullName: data.userWithoutPassword.fullName,
+                        email: data.userWithoutPassword.email,
+                        interests: data.userWithoutPassword.interests,
+                        bio: data.userWithoutPassword.bio
+                    })
+                }).catch(err => console.log(err))
+        }
+    })
 
     const [edit, setEdit] = useState(false)
 
     return (
         <div className="hero min-h-screen bg-base-200">
             {!edit && <div className="hero-content flex-col lg:flex-row">
-                <img src={profilePicture} className="max-w-sm rounded-lg shadow-2xl" />
+                {(user.avatar || otherUser.avatar) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + (props.isMain? (user.avatar) : otherUser.avatar)} className="max-w-sm rounded-lg shadow-2xl" /> || <img src={profile.src} alt='Profile Picture'/>}
                 <div className='flex flex-col gap-5'>
-                    <h1 className="text-5xl font-bold">Profile Name</h1>
+                    <h1 className="text-5xl font-bold">{props.isMain? (user.fullName? user.fullName!.split(' ')[0]: null) : (otherUser.fullName? otherUser.fullName!.split(' ')[0]: null)}'s Profile</h1>
                     <div>
-                        <h2 className="card-title">Fullname:</h2><p className="py-3">{user.fullName}</p>
+                        <h2 className="card-title">Fullname:</h2><p className="py-3">{props.isMain? user.fullName : otherUser.fullName}</p>
                     </div>
                     <div>
-                        <h2 className="card-title">Email:</h2><p className="py-3">{user.email}</p>
+                        <h2 className="card-title">Email:</h2><p className="py-3">{props.isMain? user.email : otherUser.email}</p>
                     </div>
                     <div>
-                        <h2 className="card-title">Interests:</h2><p className="py-3">{user.interests}</p>
+                        <h2 className="card-title">Interests:</h2><p className="py-3">{props.isMain? user.interests : otherUser.interests}</p>
                     </div>
                     <div>
-                        <h2 className="card-title">Bio:</h2><p className="py-3">{user.bio}</p>
+                        <h2 className="card-title">Bio:</h2><p className="py-3">{props.isMain? user.bio : otherUser.bio}</p>
                     </div>
-                    <button className="btn btn-primary" onClick={() => { setEdit(true) }}>Edit</button>
+
+                    {props.isMain && <button className="btn btn-primary" onClick={() => { setEdit(true); reset(defaultFormData) }}>Edit</button>}
                 </div>
             </div>}
 
@@ -75,7 +137,9 @@ export default function ProfileInfo() {
                 <div className='flex flex-col gap-5'>
                     <h1 className="text-5xl font-bold">{user.fullName}</h1>
                     <div className="card card-compact w-96 bg-base-100 shadow-xl">
-                        <figure><img src={profilePicture} alt="Profile Picture" /></figure>
+                        <figure>
+                            {profilePicture && <img src={profilePicture} className="max-w-sm rounded-lg shadow-2xl" /> || <img src={profile.src} alt='Profile Picture'/>}
+                        </figure>
                         <div className="card-body">
                             <div className="card-actions justify-start">
                                 <h2 className="card-title">Change Profile Picture:</h2>
@@ -90,7 +154,6 @@ export default function ProfileInfo() {
                     <h2 className="card-title">Fullname:</h2>
                     <input type="text"
                         placeholder={user.fullName!}
-                        defaultValue={user.fullName!}
                         className="input input-bordered w-full max-w-xs"
                         {...register("fullName", { required: true, minLength: 3, pattern: /^$|^[a-zA-ZčČćĆđĐšŠžŽ-]+ [a-zA-ZčČćĆđĐšŠžŽ-]+$/, maxLength: 30 })}
                     />
@@ -113,7 +176,7 @@ export default function ProfileInfo() {
                     </textarea>
 
                     <button className="btn btn-primary w-full" type='submit'>Save</button>
-                    <button className="btn btn-ghost w-full" onClick={() => { setEdit(false); setProfilePicture(user.avatar? user.avatar : profile.src) }}>Cancel</button>
+                    <button className="btn btn-ghost w-full" onClick={() => { setEdit(false) }}>Cancel</button>
                 </div>
             </form>}
         </div>

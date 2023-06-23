@@ -1,6 +1,6 @@
 export default interface User {
     id:                                 number        
-    fullname:                           string    
+    fullName:                           string    
     email:                              string     
     password:                           string | null    
     bio:                                string | null    

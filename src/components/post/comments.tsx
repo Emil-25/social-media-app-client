@@ -3,7 +3,9 @@ import Post from "@/types/post"
 import User from "@/types/user"
 import axios, { AxiosResponse } from "axios"
 import useAxios from "axios-hooks"
-import { useEffect, useRef, useState } from "react"
+import { MouseEventHandler, useEffect, useRef, useState } from "react"
+import Empty from "../empty"
+import AddComment from "./addComment"
 import Comment from "./comment"
 
 interface IProps {
@@ -16,21 +18,25 @@ export default function Comments(props: IProps) {
     )
 
     const comments = useRef<HTMLDivElement>(null)
+    
+    useEffect(() => {
+        setTimeout(() => {
+            comments.current!.style.height = `${Number(props.size)-50}px`;
+        }, 200)
+
+    },[data])
 
     if (loading) return <span className="loading loading-bars loading-lg"></span>
 
-    useEffect(() => {
-        comments.current!.style.height = `${props.size}px`;
-    },[])
-
-
     return (
         <div className="flex flex-col overflow-y-scroll" ref={comments}>
-            {data.comments.map((comment: comment, ind: string | number) => {
+            {(data && data.comments.length != 0) && data.comments.map((comment: comment) => {
                 return (
-                    <Comment comment={comment} user={data.users[ind]} />
+                    <Comment comment={comment} />
                 )
             })}
+            {(!data || data.comments.length == 0) && <Empty no="Comments"/>}
+            <AddComment postId={props.post.id} reFetch={refetch}/>
         </div>
     )
 }

@@ -1,5 +1,6 @@
 import useTheme from "@/hooks/useTheme";
 import { themes } from "@/utils/themes";
+import Link from "next/link";
 
 export default function Navbar() {
     const [theme, setTheme] = useTheme('dark')
@@ -32,10 +33,10 @@ export default function Navbar() {
                     </label>
                     <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                         <li>
-                            <a className="justify-between">
+                            <Link href='/profile/me' className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
-                            </a>
+                            </Link>
                         </li>
                         <li><a>Settings</a></li>
                         <li><a>Logout</a></li>

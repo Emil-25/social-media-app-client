@@ -20,8 +20,6 @@ function Home() {
 
     if (loading) return <span className="loading loading-bars loading-lg"></span>
 
-    if (data.posts.length) console.log(data, 'trra')
-
   return (
     <>
         {data.posts.length != 0 && data.posts.map((post: PostType) => {

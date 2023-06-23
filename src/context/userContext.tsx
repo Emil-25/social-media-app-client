@@ -3,6 +3,7 @@ import { setAuthToken } from "@/utils/setAuthToken";
 import axios from "axios";
 
 interface User {
+    id: number | null,
     avatar: string | null,
     fullName: string | null,
     email: string | null,
@@ -13,6 +14,7 @@ interface User {
 const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<User>>]>(
     [
         {
+            id: null,
             avatar: null,
             fullName: null,
             email: null,
@@ -25,6 +27,7 @@ const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<Use
 
 function UserProvider({children}:any) {
     const [user, setUser] = useState<User>({
+        id: null,
         avatar: null,
         fullName: null,
         email: null,
@@ -40,15 +43,16 @@ function UserProvider({children}:any) {
         setAuthToken(token)
     }
 
-    const fetchUser = async () => {
-        await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/me`)
+    const fetchUser = () => {
+        axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/me`)
         .then(({ data }) => {
             setUser({
-                avatar: data.avatar,
-                fullName: data.fullName,
-                email: data.email,
-                interests: data.interests,
-                bio: data.bio,
+                id: data.userWithoutPassword.id,
+                avatar: data.userWithoutPassword.avatar,
+                fullName: data.userWithoutPassword.fullName,
+                email: data.userWithoutPassword.email,
+                interests: data.userWithoutPassword.interests.join(),
+                bio: data.userWithoutPassword.bio,
             })
         })
         .catch(err => console.log(err))
@@ -57,10 +61,11 @@ function UserProvider({children}:any) {
 
     useEffect(() => {
         if (token) {
-            fetchUser()
+            fetchUser()    
         }
         else {
             setUser({
+                id: null,
                 avatar: null,
                 fullName: null,
                 email: null,
@@ -71,7 +76,6 @@ function UserProvider({children}:any) {
     },[])
 
     } // End bracket of if up there
-
     return (
         <UserContext.Provider value={[user, setUser]}>
             {children}
