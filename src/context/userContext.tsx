@@ -9,6 +9,7 @@ interface User {
     email: string | null,
     interests: string | null,
     bio: string | null,
+    isOnline: boolean,
   }
 
 const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<User>>]>(
@@ -19,7 +20,8 @@ const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<Use
             fullName: null,
             email: null,
             interests: null,
-            bio: null
+            bio: null,
+            isOnline: false,
         },
         ()=> {}
     ]
@@ -32,7 +34,8 @@ function UserProvider({children}:any) {
         fullName: null,
         email: null,
         interests: null,
-        bio: null
+        bio: null,
+        isOnline: false,
     })
 
     if (typeof window !== 'undefined') {
@@ -53,6 +56,7 @@ function UserProvider({children}:any) {
                 email: data.userWithoutPassword.email,
                 interests: data.userWithoutPassword.interests.join(),
                 bio: data.userWithoutPassword.bio,
+                isOnline: data.userWithoutPassword.isOnline,
             })
         })
         .catch(err => console.log(err))
@@ -71,9 +75,10 @@ function UserProvider({children}:any) {
                 email: null,
                 interests: null,
                 bio: null,
+                isOnline: false,
             })
         }
-    },[])
+    },[token])
 
     } // End bracket of if up there
     return (

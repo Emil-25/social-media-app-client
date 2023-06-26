@@ -1,6 +1,7 @@
 import { UserContext } from "@/context/userContext"
 import { useContext, useEffect, useState } from "react"
 import Followers from "./followers"
+import Miniposts from "./miniposts"
 import ProfileInfo from "./profileInfo"
 
 interface IProps {
@@ -34,7 +35,7 @@ export default function Profile(props: IProps) {
                     <a className="tab tab-lg" onClick={(event) => {handleTab(event); setTab(3)}}>Following</a>
                 </div>
             {tab == 1 && <Followers follows="followers" userId={props.userId} isMain={isMain}/>}
-            {tab == 2 && null}
+            {tab == 2 && <Miniposts userId={props.userId} isMain={isMain} />}
             {tab == 3 && <Followers follows="followings" userId={props.userId} isMain={isMain}/>}
             
         </section>

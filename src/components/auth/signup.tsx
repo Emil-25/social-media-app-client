@@ -1,11 +1,11 @@
 import useToggle from "@/hooks/useToggle";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useForm, SubmitHandler  } from "react-hook-form";
 import { setAuthToken } from '../../utils/setAuthToken';
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from 'next/router';
 import logo from "../../images/LimeLink_logo.png";
 import axios from "axios";
@@ -55,8 +55,6 @@ export default function SignUp() {
         return false
     }
 
-    const { data: session } = useSession();
-
     return (
         <section className='w-full flex flex-col items-center justify-center p-[2rem]'>
             <div className='flex flex-col items-center w-[350px] rounded-3xl border-primary border p-[1.2rem]'>
@@ -76,7 +74,7 @@ export default function SignUp() {
                             <span className="label-text">Enter your fullname:</span>
                         </label>
                         <input type="text"
-                            {...register("fullName", {required: true, minLength: 3, pattern: /^$|^[a-zA-ZčČćĆđĐšŠžŽ-]+ [a-zA-ZčČćĆđĐšŠžŽ-]+$/, maxLength: 30})}
+                            {...register("fullName", {required: true, minLength: 3, pattern: /^$|^[a-zA-ZčČćĆđĐšŠžŽ-]+ [a-zA-ZčČćĆđĐšŠžŽ-]+( [a-zA-ZčČćĆđĐšŠžŽ-]*)*/, maxLength: 30})}
                             placeholder="ex. John Doe"
                             className="input input-bordered input-primary w-full max-w-xs" 
                             aria-invalid={errors.fullName ? "true" : "false"}

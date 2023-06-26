@@ -1,23 +1,43 @@
 import Post from '@/types/post';
-import User from '@/types/user';
 import { isImage, isVideo } from '@/utils/checkFileType';
 import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState } from 'react';
+import { useEventListener, useIntersectionObserver } from 'usehooks-ts';
+import { useRouter } from 'next/router'
+
 
 interface IProps {
-    toggleCommentIcon: boolean,
-    user: User,
     post: Post,
 }
 
 export default function MiniPost(props: IProps) {
+    const container = useRef<HTMLDivElement>(null);
     const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
+    const router = useRouter()
+    const click = (event: Event) => {
+        router.push('/posts/' + props.post.id)
+    }
+
+    const [play, setPlay] = useState(false);
+    const postEntry = useIntersectionObserver(container,{})
+    const isVisible = !!postEntry?.isIntersecting
+
+    useEffect(() => {
+        if (isVisible){
+            setPlay(true)
+        }else {
+            setPlay(false)
+        }
+    }, [isVisible])
+
+    useEventListener('click', click, container)
 
     return (
         <>
-            <div className="card card-compact w-[32%] bg-base-100 shadow-xl h-auto m-1 rounded-sm">
-                <figure>
-                    {isImage(props.post.url) && <img src={props.post.url} alt={props.post.title} />}
-                    {isVideo(props.post.url) && <ReactPlayer url={props.post.url} />}
+            <div className="card card-compact p-0 w-[23%] bg-base-100 h-auto shadow-xl m-1 rounded-sm" ref={container}>
+                <figure className='h-[250px]'>
+                    {isImage(props.post.url) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + props.post.url} alt={props.post.title} />}
+                    {isVideo(props.post.url) && <ReactPlayer controls={true} playing={play} loop={true} url={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + props.post.url} />}
                 </figure> 
             </div> 
        </>

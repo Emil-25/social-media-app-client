@@ -1,10 +1,10 @@
 import useToggle from "@/hooks/useToggle";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import logo from "../../images/LimeLink_logo.png";
 import axios from "axios";
 import { setAuthToken } from "@/utils/setAuthToken";
@@ -25,6 +25,7 @@ export default function LogIn() {
         .then(({ data }) => {
             setAuthToken(data.token); 
             localStorage.setItem("token", data.token)
+
             router.push('/')
         })
         .catch(err => {
@@ -44,7 +45,6 @@ export default function LogIn() {
         if (isHidden) password.current?.children[0].setAttribute('type', 'text')
         else password.current?.children[0].setAttribute('type', 'password')
     }
-    const { data: session } = useSession();
 
     return (
         <section className='w-full flex flex-col items-center justify-center p-[2rem]'>

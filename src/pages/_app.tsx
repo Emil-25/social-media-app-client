@@ -8,13 +8,13 @@ import PostForm from "@/components/post/postForm";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider>
-        <ProvidersWrapper>
+    <ProvidersWrapper>
+        <UserProvider>
             <Layout>
                 <Component {...pageProps} />
                 <PostForm />
             </Layout>
-        </ProvidersWrapper>
-    </UserProvider>
+        </UserProvider>
+    </ProvidersWrapper>
   );
 }

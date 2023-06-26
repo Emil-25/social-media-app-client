@@ -3,10 +3,18 @@ import { useRef } from "react"
 
 export default function Settings() {
     const privateAccount = useRef<HTMLInputElement>(null)
+    const alwaysOffline = useRef<HTMLInputElement>(null)
 
     const handlePrivateAccount = async () => {
         const data = privateAccount.current!.value
-        await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/users/me`,
+        await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/settings/privateAccount`,
+            { data }
+        ).catch(err=>console.log(err))
+    }
+
+    const handleAlwaysOffline = async () => {
+        const data = alwaysOffline.current!.value;
+        await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/settings/alwaysOffline`,
             { data }
         ).catch(err=>console.log(err))
     }
@@ -18,9 +26,9 @@ export default function Settings() {
                 <div className="card-body flex flex-row">
                     <h2 className="card-title">Private account (No one will see your content unless they follow you)</h2>
                     <div className="card-actions place-content-center justify-center">
-                        <input type="checkbox" ref={privateAccount} onClick={handlePrivateAccount} className="toggle toggle-primary ml-5" />
+                        <input type="checkbox" ref={privateAccount} className="toggle toggle-primary ml-5" />
                     </div>
-                    <button className="btn btn-primary ml-auto">Save</button>
+                    <button className="btn btn-primary ml-auto" onClick={handlePrivateAccount}>Save</button>
                 </div>
             </div>
             <div className="card w-full bg-base-100 shadow-xl border border-primary h-20 justify-center my-10">
@@ -29,7 +37,7 @@ export default function Settings() {
                     <div className="card-actions place-content-center justify-center">
                         <input type="checkbox" className="toggle toggle-primary ml-5" />
                     </div>
-                    <button className="btn btn-primary ml-auto">Save</button>
+                    <button className="btn btn-primary ml-auto" onClick={handleAlwaysOffline}>Save</button>
                 </div>
             </div>
             <div className="card w-full bg-base-100 shadow-xl border border-primary h-20 justify-center my-10">

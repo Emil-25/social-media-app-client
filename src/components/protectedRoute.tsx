@@ -12,6 +12,8 @@ export const ProtectedRoute = (Component: FC<any>) => {
         const router = useRouter();
 
         if (loading) return <div>Loading!</div>
+
+        if (error) router.push('/login')
         if (!data) router.push('/login')
 
         return !!data ? <Component data={data} /> : null; // Render whatever you want while the authentication occurs
@@ -28,7 +30,9 @@ export const LoggedRoute = (Component: FC<any>) => {
         const router = useRouter();
 
         if (loading) return <span className="loading loading-bars loading-lg"></span>
-        if (data) router.push('/')
+        if (error) return <Component data={data} />
+
+        if (!!data && !!data.userWithOutPassword) router.push('/')
 
         return !!data ? null : <Component data={data} />; // Render whatever you want while the authentication occurs
     };

@@ -19,6 +19,7 @@ function Home() {
     )
 
     if (loading) return <span className="loading loading-bars loading-lg"></span>
+    if (error) return <span className="loading loading-bars loading-lg"></span>
 
   return (
     <>

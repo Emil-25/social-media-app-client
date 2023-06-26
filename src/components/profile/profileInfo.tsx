@@ -24,6 +24,7 @@ interface User {
     email: string | null,
     interests: string | null,
     bio: string | null,
+    isOnline: boolean
   }
 
 export default function ProfileInfo(props: IProps) {
@@ -35,7 +36,8 @@ export default function ProfileInfo(props: IProps) {
         fullName: null,
         email: null,
         interests: null,
-        bio: null
+        bio: null,
+        isOnline: false
     });
     const [profilePicture, setProfilePicture] = useState(user.avatar? `${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/${user.avatar}` : profile.src)
 
@@ -86,7 +88,6 @@ export default function ProfileInfo(props: IProps) {
     useEffect(() => {
         if (edit && watchedAvatar![0] != 'u') {
             const avatarFile: any = watchedAvatar![0]
-            console.log(avatarFile, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
             setProfilePicture(URL.createObjectURL(avatarFile))
         }
 
@@ -102,11 +103,12 @@ export default function ProfileInfo(props: IProps) {
                         fullName: data.userWithoutPassword.fullName,
                         email: data.userWithoutPassword.email,
                         interests: data.userWithoutPassword.interests,
-                        bio: data.userWithoutPassword.bio
+                        bio: data.userWithoutPassword.bio,
+                        isOnline: data.userWithoutPassword.isOnline,
                     })
                 }).catch(err => console.log(err))
         }
-    })
+    },[props.isMain])
 
     const [edit, setEdit] = useState(false)
 
