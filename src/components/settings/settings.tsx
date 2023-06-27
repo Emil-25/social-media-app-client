@@ -6,17 +6,19 @@ export default function Settings() {
     const alwaysOffline = useRef<HTMLInputElement>(null)
 
     const handlePrivateAccount = async () => {
-        const data = privateAccount.current!.value
+        const data = privateAccount.current!.checked
         await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/settings/privateAccount`,
-            { data }
-        ).catch(err=>console.log(err))
+            { privateAccount: data }
+        ).then(data => alert('Setting changed'))
+        .catch(err=>console.log(err))
     }
 
     const handleAlwaysOffline = async () => {
-        const data = alwaysOffline.current!.value;
+        const data = alwaysOffline.current!.checked;
         await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/settings/alwaysOffline`,
-            { data }
-        ).catch(err=>console.log(err))
+            { alwaysOffline: data }
+        ).then(data => alert('Setting changed'))
+        .catch(err=>console.log(err))
     }
 
     return (
@@ -35,7 +37,7 @@ export default function Settings() {
                 <div className="card-body flex flex-row">
                     <h2 className="card-title">Online Hidden</h2>
                     <div className="card-actions place-content-center justify-center">
-                        <input type="checkbox" className="toggle toggle-primary ml-5" />
+                        <input type="checkbox" ref={alwaysOffline} className="toggle toggle-primary ml-5" />
                     </div>
                     <button className="btn btn-primary ml-auto" onClick={handleAlwaysOffline}>Save</button>
                 </div>
@@ -44,7 +46,7 @@ export default function Settings() {
                 <div className="card-body flex flex-row">
                     <h2 className="card-title">Just toggle</h2>
                     <div className="card-actions">
-                        <input type="checkbox" className="toggle toggle-primary ml-5" />
+                        <input type="checkbox" onChange={(e) => alert("Fun fact: The average person spends about 2 years on the phone in a lifetime")} className="toggle toggle-primary ml-5" />
                     </div>
                 </div>
             </div>

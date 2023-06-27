@@ -11,12 +11,14 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import randomPWD from "@/utils/randomString";
 import { signOut } from "next-auth/react";
+import Search from "./search";
 
 
 export default function Navbar() {
     const [theme, setTheme] = useTheme('dark')
     const [user, setUser] = useContext(UserContext)
     const [token, setToken] = useState(false)
+    const [text, setText] = useState('')
     const {data: session} = useSession()
 
     const router = useRouter();
@@ -35,20 +37,38 @@ export default function Navbar() {
                 fullName: session.user!.name,
                 email: session.user!.email,
                 password: pwd,
-                cpassword: pwd,
-                agree: true
+                avatar: session.user!.image
             }
-            axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/auth/signup`, data)
+            axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/auth/signup/google`, data)
                 .then(({ data }) => {
                     setAuthToken(data.token); 
-                    localStorage.setItem("token", data.token)
+                    localStorage.setItem("token", data.token);
+                    setUser({
+                        id: data.user.id,
+                        avatar: data.user.avatar,
+                        fullName: data.user.fullName,
+                        email: data.user.email,
+                        interests: data.user.interests.join(),
+                        bio: data.user.bio,
+                        isOnline: data.user.isOnline,
+                    })
                     router.push('/')
                 })
                 .catch(err => {
-                    axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/auth/login/google`, {email: session.user!.email})
+                    axios.post(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/auth/login/google`, {email: session.user!.email, avatar: session.user!.image})
                         .then(({ data }) => {
                             setAuthToken(data.token); 
-                            localStorage.setItem("token", data.token)  
+                            localStorage.setItem("token", data.token);
+                            console.log(data.user.avatar)
+                            setUser({
+                                id: data.user.id,
+                                avatar: data.user.avatar,
+                                fullName: data.user.fullName,
+                                email: data.user.email,
+                                interests: data.user.interests.join(),
+                                bio: data.user.bio,
+                                isOnline: data.user.isOnline,
+                            })
                             router.push('/')              
                         }).catch(err=> console.log(err))
                 })
@@ -75,12 +95,12 @@ export default function Navbar() {
                 <Link href='/' className="btn btn-ghost normal-case text-xl text-emerald-300">LimeLink</Link>
             </div>
             <div className="flex-none gap-2">
-                <button onClick={() => signOut()}>Sign Out</button>
 
             {token && <> <Link href='/miniposts' className="btn btn-circle btn-accent btn-outline"><TbWorld size='2rem'/></Link>
 
                 <div className="form-control">
-                    <input type="text" placeholder="Search" className="input input-bordered border-primary w-24 md:w-auto" />
+                    <input type="text" placeholder="Search" onChange={(e) => setText(e.target.value)} className="input input-bordered border-primary w-24 md:w-auto" />
+                    <Search text={text} />
                 </div>
 
                 <div className="dropdown dropdown-bottom dropdown-end">
@@ -96,8 +116,8 @@ export default function Navbar() {
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 h-10 rounded-full">
+                            {(user.avatar && (session && session!.user)) && <img src={user.avatar} alt='Profile Picture'/>}
                             {user.avatar && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + user.avatar} alt='Profile Picture'/>}
-                            {(session && session.user!.image) && <img src={session.user!.image} alt='Profile Picture' referrerPolicy="no-referrer"/>}
                             {(!user.avatar && !(session && session!.user!.image)) && <img src={profile.src} alt='Profile Picture'/>}
                         </div>
                     </label>

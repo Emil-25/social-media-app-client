@@ -4,6 +4,7 @@ import useAxios from "axios-hooks";
 import { useEffect, useRef, useState } from "react";
 import profile from '../../images/blank_profile.png';
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface IProps {
     user: User,
@@ -11,6 +12,8 @@ interface IProps {
 
 export default function Follower(props: IProps) {
     const [isFollowing, setIsFollowing] = useState(false);
+    const [hidden, setHidden] = useState(false)
+
     const avatar = useRef<HTMLDivElement>(null)
     const { data: session } = useSession()
     
@@ -44,14 +47,16 @@ export default function Follower(props: IProps) {
 
     return (
         <div className="h-20 card bg-base-300 rounded-box place-items-center flex flex-row p-3 my-1">
-            <div className="avatar" ref={avatar}>
-                <div className="w-10 h-10 rounded-full">
-                        {props.user.avatar && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + props.user.avatar} alt='Profile Picture'/> || <img src={profile.src} alt='Profile Picture'/> }
-                        {(session && session.user!.image) && <img src={session.user!.image} alt='Profile Picture' referrerPolicy="no-referrer"/>}
-                        {(!props.user.avatar && !(session && session!.user!.image)) && <img src={profile.src} alt='Profile Picture'/>}
+            <Link href={'/profile/' + props.user.id} className="flex flex-row">
+                <div className="avatar" ref={avatar}>
+                    <div className="w-10 h-10 rounded-full">
+                            {props.user.avatar && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + props.user.avatar} onError={() => setHidden(true)} hidden={hidden} alt='Profile Picture'/> }
+                            {props.user.avatar && <img src={props.user.avatar} alt='Profile Picture'/> }
+                            {(!props.user.avatar && !(session && session!.user!.image)) && <img src={profile.src} alt='Profile Picture'/>}
+                    </div>
                 </div>
-            </div>
-            <h2 className="card-title text-[1.2rem] mx-4">{props.user.fullName}</h2>
+                <h2 className="card-title text-[1.2rem] mx-4">{props.user.fullName}</h2>
+            </Link>
             {isFollowing && <div className="card-actions ml-auto mr-2">
                 <button className="btn btn-primary btn-outline" onClick={handleUnFollow}>Unfollow</button>
             </div>}

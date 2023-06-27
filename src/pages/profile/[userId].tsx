@@ -7,6 +7,8 @@ export default function ProfilePage() {
     const userId:any = router.query.userId;
 
   return (
-    <Profile userId={userId}/>
+    <>
+        {userId && <Profile userId={userId}/>}
+    </>
   )
 }

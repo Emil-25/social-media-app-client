@@ -4,7 +4,7 @@ import useAxios from "axios-hooks"
 
 export default function Miniposts() {
     const [{ data, loading, error }, refetch] = useAxios(
-        `${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/posts/`
+        `${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/posts`
     )
 
     if (loading) return <span className="loading loading-bars loading-lg"></span>

@@ -4,6 +4,7 @@ import { SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import axios from 'axios';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react';
 
 interface IFormInput {
     avatar: string | null,
@@ -29,6 +30,7 @@ interface User {
 
 export default function ProfileInfo(props: IProps) {
     const [user, setUser] = useContext(UserContext);
+    const { data: session } = useSession();
     const router = useRouter()
     const [otherUser, setOtherUser] = useState<User>({
         id: null,
@@ -112,10 +114,19 @@ export default function ProfileInfo(props: IProps) {
 
     const [edit, setEdit] = useState(false)
 
+    console.log(otherUser, "wtttttttttttttttttttttfffffffffffffffffff")
+
     return (
         <div className="hero min-h-screen bg-base-200">
             {!edit && <div className="hero-content flex-col lg:flex-row">
-                {(user.avatar || otherUser.avatar) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + (props.isMain? (user.avatar) : otherUser.avatar)} className="max-w-sm rounded-lg shadow-2xl" /> || <img src={profile.src} alt='Profile Picture'/>}
+
+                {(props.isMain && (user.avatar && (session && session!.user))) && <img src={user.avatar} className="max-w-sm rounded-lg shadow-2xl"/>}
+                {(props.isMain && (user.avatar && !(session && session!.user))) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + user.avatar} className="max-w-sm rounded-lg shadow-2xl"/>}
+                {(props.isMain && (!user.avatar && !(session && session!.user))) && <img src={profile.src} alt='Profile Picture' className="max-w-sm rounded-lg shadow-2xl"/>}
+                {(!props.isMain && otherUser.avatar) && <img src={otherUser.avatar} className="max-w-sm rounded-lg shadow-2xl" onError={i => (i.target as HTMLImageElement).style.display='none'}/>}
+                {(!props.isMain && otherUser.avatar) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + otherUser.avatar} onError={i => (i.target as HTMLImageElement).style.display='none'} className="max-w-sm rounded-lg shadow-2xl"/>}
+                {(!props.isMain && !otherUser.avatar) && <img src={profile.src} alt='Profile Picture' className="max-w-sm rounded-lg shadow-2xl"/>}
+
                 <div className='flex flex-col gap-5'>
                     <h1 className="text-5xl font-bold">{props.isMain? (user.fullName? user.fullName!.split(' ')[0]: null) : (otherUser.fullName? otherUser.fullName!.split(' ')[0]: null)}'s Profile</h1>
                     <div>
