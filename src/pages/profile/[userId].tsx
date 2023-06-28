@@ -1,8 +1,9 @@
 import Profile from "@/components/profile/profile";
+import { ProtectedRoute } from "@/components/protectedRoute";
 import { useRouter } from "next/router";
 
 
-export default function ProfilePage() {
+function ProfilePage() {
     const router = useRouter();
     const userId:any = router.query.userId;
 
@@ -12,3 +13,5 @@ export default function ProfilePage() {
     </>
   )
 }
+
+export default ProtectedRoute(ProfilePage);

@@ -29,7 +29,7 @@ export default function Profile(props: IProps) {
     return (
         <section className="flex flex-col justify-center">
             <ProfileInfo userId={props.userId} isMain={isMain}/>
-                <div className="tabs tabs-boxed justify-center">
+                <div className="tabs tabs-boxed justify-center w-full flex-nowrap">
                     <a className="tab tab-lg tab-active" onClick={(event) => {handleTab(event); setTab(1)}}>Followers</a>
                     <a className="tab tab-lg" onClick={(event) => {handleTab(event); setTab(2)}}>Posts</a>
                     <a className="tab tab-lg" onClick={(event) => {handleTab(event); setTab(3)}}>Following</a>

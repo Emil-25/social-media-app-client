@@ -34,7 +34,7 @@ export default function MiniPost(props: IProps) {
 
     return (
         <>
-            <div className="card card-compact p-0 w-[23%] bg-base-100 h-auto shadow-xl m-1 rounded-sm" ref={container}>
+            <div className="card card-compact p-0 sm:w-[23%] w-full bg-base-100 h-auto shadow-xl m-1 rounded-sm" ref={container}>
                 <figure className='h-[250px]'>
                     {isImage(props.post.url) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + props.post.url} alt={props.post.title} />}
                     {isVideo(props.post.url) && <ReactPlayer controls={true} playing={play} loop={true} url={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + props.post.url} />}

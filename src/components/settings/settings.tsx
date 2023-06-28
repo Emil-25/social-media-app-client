@@ -1,4 +1,7 @@
+import { setAuthToken } from "@/utils/setAuthToken"
 import axios from "axios"
+import { signOut } from "next-auth/react"
+import router from "next/router"
 import { useRef } from "react"
 
 export default function Settings() {
@@ -13,12 +16,25 @@ export default function Settings() {
         .catch(err=>console.log(err))
     }
 
-    const handleAlwaysOffline = async () => {
+    const handleAlwaysOffline = () => {
         const data = alwaysOffline.current!.checked;
-        await axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/settings/alwaysOffline`,
+        axios.patch(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/settings/alwaysOffline`,
             { alwaysOffline: data }
         ).then(data => alert('Setting changed'))
         .catch(err=>console.log(err))
+    }
+
+    const handleDelete = async () => {
+        if (confirm("Are You Sure?") == true) {
+            axios.delete(`${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/users/me`)
+            .then(data => {
+                localStorage.removeItem('token')
+                signOut();
+                setAuthToken(false)
+                router.push('/login')
+            })
+            .catch(err => alert('Could not delete the account'))
+        }
     }
 
     return (
@@ -26,7 +42,7 @@ export default function Settings() {
             <h1 className="text-[2rem]">Settings</h1>
             <div className="card w-full bg-base-100 shadow-xl border border-primary h-20 justify-center my-10">
                 <div className="card-body flex flex-row">
-                    <h2 className="card-title">Private account (No one will see your content unless they follow you)</h2>
+                    <h2 className="card-title">Private account (No one will see your media)</h2>
                     <div className="card-actions place-content-center justify-center">
                         <input type="checkbox" ref={privateAccount} className="toggle toggle-primary ml-5" />
                     </div>
@@ -54,7 +70,7 @@ export default function Settings() {
                 <div className="card-body flex flex-row">
                     <h2 className="card-title">Delete Your account</h2>
                     <div className="card-actions">
-                        <button className="btn btn-error ml-5">Delete</button>
+                        <button className="btn btn-error ml-5" onClick={handleDelete}>Delete</button>
                     </div>
                 </div>
             </div>

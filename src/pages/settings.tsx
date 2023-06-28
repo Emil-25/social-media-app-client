@@ -1,7 +1,10 @@
+import { ProtectedRoute } from "@/components/protectedRoute";
 import Settings from "@/components/settings/settings";
 
-export default function SettingsPages() {
+function SettingsPages() {
   return (
     <Settings />
   )
 }
+
+export default ProtectedRoute(SettingsPages);

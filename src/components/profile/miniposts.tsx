@@ -13,6 +13,7 @@ export default function Miniposts(props: IProps) {
     )
 
     if (loading) return <span className="loading loading-bars loading-lg"></span>
+    if (error) return <h1 className="text-neutral text-center text-[3rem] p-3">{error.response?.data}</h1>
 
   return (
     <div className="flex flex-row flex-wrap justify-around">

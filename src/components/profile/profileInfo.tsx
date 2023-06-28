@@ -114,18 +114,16 @@ export default function ProfileInfo(props: IProps) {
 
     const [edit, setEdit] = useState(false)
 
-    console.log(otherUser, "wtttttttttttttttttttttfffffffffffffffffff")
-
     return (
-        <div className="hero min-h-screen bg-base-200">
-            {!edit && <div className="hero-content flex-col lg:flex-row">
+        <div className="hero min-h-screen bg-base-200 mb-1">
+            {!edit && <div className="sm:hero-content flex-col lg:flex-row">
 
-                {(props.isMain && (user.avatar && (session && session!.user))) && <img src={user.avatar} className="max-w-sm rounded-lg shadow-2xl"/>}
-                {(props.isMain && (user.avatar && !(session && session!.user))) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + user.avatar} className="max-w-sm rounded-lg shadow-2xl"/>}
-                {(props.isMain && (!user.avatar && !(session && session!.user))) && <img src={profile.src} alt='Profile Picture' className="max-w-sm rounded-lg shadow-2xl"/>}
-                {(!props.isMain && otherUser.avatar) && <img src={otherUser.avatar} className="max-w-sm rounded-lg shadow-2xl" onError={i => (i.target as HTMLImageElement).style.display='none'}/>}
-                {(!props.isMain && otherUser.avatar) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + otherUser.avatar} onError={i => (i.target as HTMLImageElement).style.display='none'} className="max-w-sm rounded-lg shadow-2xl"/>}
-                {(!props.isMain && !otherUser.avatar) && <img src={profile.src} alt='Profile Picture' className="max-w-sm rounded-lg shadow-2xl"/>}
+                {(props.isMain && (user.avatar && (session && session!.user))) && <img src={user.avatar} className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl"/>}
+                {(props.isMain && (user.avatar && !(session && session!.user))) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + user.avatar} className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl"/>}
+                {(props.isMain && (!user.avatar && !(session && session!.user))) && <img src={profile.src} alt='Profile Picture' className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl"/>}
+                {(!props.isMain && otherUser.avatar) && <img src={otherUser.avatar} className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl" onError={i => (i.target as HTMLImageElement).style.display='none'}/>}
+                {(!props.isMain && otherUser.avatar) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + otherUser.avatar} onError={i => (i.target as HTMLImageElement).style.display='none'} className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl"/>}
+                {(!props.isMain && !otherUser.avatar) && <img src={profile.src} alt='Profile Picture' className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl"/>}
 
                 <div className='flex flex-col gap-5'>
                     <h1 className="text-5xl font-bold">{props.isMain? (user.fullName? user.fullName!.split(' ')[0]: null) : (otherUser.fullName? otherUser.fullName!.split(' ')[0]: null)}'s Profile</h1>
@@ -146,12 +144,12 @@ export default function ProfileInfo(props: IProps) {
                 </div>
             </div>}
 
-            {edit && <form action="" method="post" encType='multipart/form-data' onSubmit={handleSubmit(onSubmit)} className="hero-content flex-col lg:flex-row">
+            {edit && <form action="" method="post" encType='multipart/form-data' onSubmit={handleSubmit(onSubmit)} className="sm:hero-content flex-col lg:flex-row mb-1">
                 <div className='flex flex-col gap-5'>
                     <h1 className="text-5xl font-bold">{user.fullName}</h1>
-                    <div className="card card-compact w-96 bg-base-100 shadow-xl">
+                    <div className="card card-compact max-w-96 bg-base-100 shadow-xl">
                         <figure>
-                            {profilePicture && <img src={profilePicture} className="max-w-sm rounded-lg shadow-2xl" /> || <img src={profile.src} alt='Profile Picture'/>}
+                            {profilePicture && <img src={profilePicture} className="sm:max-w-sm max-w-xs rounded-lg shadow-2xl" /> || <img src={profile.src} alt='Profile Picture'/>}
                         </figure>
                         <div className="card-body">
                             <div className="card-actions justify-start">

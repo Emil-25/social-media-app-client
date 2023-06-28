@@ -90,30 +90,53 @@ export default function Navbar() {
 
     return (
         <>
-           <div className="navbar bg-base-100 fixed z-50 top-0">
+           <div className="navbar bg-base-100 fixed z-50 top-0 flex-wrap">
             <div className="flex-1">
-                <Link href='/' className="btn btn-ghost normal-case text-xl text-emerald-300">LimeLink</Link>
+                <Link href='/' className="btn btn-ghost normal-case sm:text-xl  text-emerald-300">LimeLink</Link>
             </div>
-            <div className="flex-none gap-2">
+            <div className="form-control sm:hidden">
+                    <input type="text" placeholder="Search" onChange={(e) => setText(e.target.value)} className="input input-bordered border-primary w-24 md:w-auto" />
+                    <Search text={text} />
+            </div>
+            <div className="dropdown dropdown-end ml-1 sm:hidden">
+                    <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                        <div className="w-10 h-10 rounded-full">
+                            {(user.avatar && (session && session!.user)) && <img src={user.avatar} alt='Profile Picture'/>}
+                            {user.avatar && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + user.avatar} alt='Profile Picture'/>}
+                            {(!user.avatar && !(session && session!.user!.image)) && <img src={profile.src} alt='Profile Picture'/>}
+                        </div>
+                    </label>
+                    <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                        <li>
+                            <Link href='/profile/me' className="justify-between">
+                                Profile
+                                <span className="badge">New</span>
+                            </Link>
+                        </li>
+                        <li><Link href='/settings'>Settings</Link></li>
+                        <li><button onClick={handleLogOut}>Logout</button></li>
+                    </ul>
+                </div>
+            <div className="sm:flex flex-row justify-center mx-auto my-1 gap-3 hidden">
 
-            {token && <> <Link href='/miniposts' className="btn btn-circle btn-accent btn-outline"><TbWorld size='2rem'/></Link>
+            {token && <> <Link href='/miniposts' className="btn btn-circle btn-accent btn-outline sm:btn-md btn-sm sm:text-[2rem] text-xl"><TbWorld/></Link>
 
-                <div className="form-control">
+                <div className="form-control hidden sm:block">
                     <input type="text" placeholder="Search" onChange={(e) => setText(e.target.value)} className="input input-bordered border-primary w-24 md:w-auto" />
                     <Search text={text} />
                 </div>
 
                 <div className="dropdown dropdown-bottom dropdown-end">
-                    <label tabIndex={0} className="btn m-1 text-accent btn-primary">Theme</label>
-                    <ul tabIndex={0} className="dropdown-content  p-2 shadow bg-base-100 rounded-box h-[40vh] overflow-x-hidden flex flex-col">
+                    <label tabIndex={0} className="btn m-1 text-accent btn-primary sm:btn-md btn-sm">Theme</label>
+                    <ul tabIndex={0} className="dropdown-content p-2 shadow bg-base-100 rounded-box h-[40vh] overflow-x-hidden flex flex-col">
                         {themes.map((theme) => {
                             return <button className="p-3" key={theme} onClick={() => {setTheme(theme)}}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</button>
                         })}
                     </ul>
                 </div>
-                <label htmlFor="my_modal_6" className="btn">Add Post</label>
+                <label htmlFor="my_modal_6" className="btn sm:btn-md btn-sm">Add Post</label>
 
-                <div className="dropdown dropdown-end">
+                <div className="dropdown dropdown-end hidden sm:inline-block">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 h-10 rounded-full">
                             {(user.avatar && (session && session!.user)) && <img src={user.avatar} alt='Profile Picture'/>}
@@ -133,7 +156,30 @@ export default function Navbar() {
                     </ul>
                 </div> </>}
             </div> 
-        </div> 
+        </div>
+        <div className="navbar bg-base-100 fixed z-50 bottom-0 flex-wrap sm:hidden">
+        <div className="flex flex-row justify-center mx-auto my-1 gap-3 ">
+
+            {token && <> <Link href='/miniposts' className="btn btn-circle btn-accent btn-outline sm:btn-md btn-sm sm:text-[2rem] text-xl"><TbWorld/></Link>
+
+                <div className="form-control hidden sm:block">
+                    <input type="text" placeholder="Search" onChange={(e) => setText(e.target.value)} className="input input-bordered border-primary w-24 md:w-auto" />
+                    <Search text={text} />
+                </div>
+
+                <div className="dropdown dropdown-top">
+                    <label tabIndex={0} className="btn m-1 text-accent btn-primary sm:btn-md btn-sm">Theme</label>
+                    <ul tabIndex={0} className="dropdown-content p-2 shadow bg-base-100 rounded-box h-[40vh] overflow-x-hidden flex flex-col">
+                        {themes.map((theme) => {
+                            return <button className="p-3" key={theme} onClick={() => {setTheme(theme)}}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</button>
+                        })}
+                    </ul>
+                </div>
+                <label htmlFor="my_modal_6" className="btn sm:btn-md btn-sm">Add Post</label>
+ </>}
+                
+            </div>  
+            </div>
         </>
     )
 }

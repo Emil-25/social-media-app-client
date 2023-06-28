@@ -140,30 +140,35 @@ export default function Content(props: IProps) {
     if (error) console.log(error)
 
     return (
-        <div className="card card-compact max-w-[75%] bg-base-100 shadow-xl" ref={post}>
+        <div className="card card-compact sm:max-w-[75%] w-[100%] bg-base-100 shadow-xl" ref={post}>
             <div className="card-body flex flex-row gap-5">
             <Link href={'/profile/' + data.userWithoutPassword.id} className='flex flex-row'>
                 <div className= 'avatar' ref={avatar}>
                     <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                        {(data && data.userWithoutPassword.avatar) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + data.userWithoutPassword.avatar} onError={() => setHidden(true)} hidden={hidden} alt='Profile Picture'/> }
-                        {(data && data.userWithoutPassword.avatar) && <img src={data.userWithoutPassword.avatar} alt='Profile Picture'/> }
-                        {(!(data && data.userWithoutPassword.avatar) && !(session && session!.user!.image)) && <img src={profile.src} alt='Profile Picture'/>}
+
+                        {(isMine && (user.avatar && (session && session!.user))) && <img src={user.avatar} className="max-w-sm rounded-lg shadow-2xl"/>}
+                        {(isMine && (user.avatar && !(session && session!.user))) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + user.avatar} className="max-w-sm rounded-lg shadow-2xl"/>}
+                        {(isMine && (!user.avatar && !(session && session!.user))) && <img src={profile.src} alt='Profile Picture' className="max-w-sm rounded-lg shadow-2xl"/>}
+                        {(!isMine && (data && data.userWithoutPassword.avatar)) && <img src={data.userWithoutPassword.avatar} className="max-w-sm rounded-lg shadow-2xl" onError={i => (i.target as HTMLImageElement).style.display='none'}/>}
+                        {(!isMine && (data && data.userWithoutPassword.avatar)) && <img src={(process.env.NEXT_PUBLIC_SERVER_URL) as string + '/' + data.userWithoutPassword.avatar} onError={i => (i.target as HTMLImageElement).style.display='none'} className="max-w-sm rounded-lg shadow-2xl"/>}
+                        {(!isMine && !(data && data.userWithoutPassword.avatar)) && <img src={profile.src} alt='Profile Picture' className="max-w-sm rounded-lg shadow-2xl"/>}
+
                     </div>
                 </div>
-                <h2 className="card-title text-[1.2rem] mx-4">{data.userWithoutPassword.fullName}</h2>
+                <h2 className="card-title sm:text-[1.2rem] text-[1rem] mx-3">{data.userWithoutPassword.fullName}</h2>
             </Link>
 
             {(isFollowing && !isMine) && <div className="card-actions ml-auto mr-2">
-                <button className="btn btn-accent btn-outline" onClick={handleUnFollow}>Unfollow</button>
+                <button className="btn btn-accent btn-outline btn-sm sm:btn-md" onClick={handleUnFollow}>Unfollow</button>
             </div>}
             {(!isFollowing && !isMine) && <div className="card-actions ml-auto mr-2">
-                <button className="btn btn-accent btn-outline" onClick={handleFollow}>Follow</button>
+                <button className="btn btn-accent btn-outline btn-sm sm:btn-md" onClick={handleFollow}>Follow</button>
             </div>}
 
             {isMine && <div className='w-[20px] h-[20px] ml-auto'></div>}
 
             {isMine && <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn m-1 rounded-full btn-secondary btn-outline"><AiOutlineMore size='1.5rem' /></label>
+                <label tabIndex={0} className="btn m-1 rounded-full btn-secondary btn-outline btn-sm sm:btn-md"><AiOutlineMore size='1.5rem' /></label>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                     <li><button onClick={handleDelete}>Delete Post</button></li>
                 </ul>
@@ -180,13 +185,13 @@ export default function Content(props: IProps) {
             <div className="card-body flex flex-col flex-wrap">
                 <p>{numberOfLikes} likes</p>
                 <div className="card-actions justify-start mb-2">
-                    {!isLiked && <button className="btn btn-primary btn-outline" onClick={handleLike}><AiOutlineHeart size='1.5rem'/></button>}
-                    {isLiked && <button className="btn btn-primary" onClick={handleUnLike}><AiFillHeart size='1.5rem'/></button>}
+                    {!isLiked && <button className="btn btn-primary btn-outline btn-sm sm:btn-md" onClick={handleLike}><AiOutlineHeart size='1.5rem'/></button>}
+                    {isLiked && <button className="btn btn-primary btn-sm sm:btn-md" onClick={handleUnLike}><AiFillHeart size='1.5rem'/></button>}
 
-                    {isCommentsOpen && <button className="btn btn-accent" onClick={handleComments}><BiCommentDetail size='1.5rem'/></button>}
-                    {!isCommentsOpen && <button className="btn btn-accent btn-outline" onClick={handleComments}><BiCommentDetail size='1.5rem'/></button>}
+                    {isCommentsOpen && <button className="btn btn-accent btn-sm sm:btn-md" onClick={handleComments}><BiCommentDetail size='1.5rem'/></button>}
+                    {!isCommentsOpen && <button className="btn btn-accent btn-outline btn-sm sm:btn-md" onClick={handleComments}><BiCommentDetail size='1.5rem'/></button>}
 
-                    <button className="btn btn-secondary btn-outline" onClick={handleShare}><AiOutlineShareAlt size='1.5rem'/></button>
+                    <button className="btn btn-secondary btn-outline btn-sm sm:btn-md" onClick={handleShare}><AiOutlineShareAlt size='1.5rem'/></button>
 
                     <p className='text-right text-neutral-content'>Created at: {new Date(props.post.createdAt).toLocaleString()}</p>
                 </div>

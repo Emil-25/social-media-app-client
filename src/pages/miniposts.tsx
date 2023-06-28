@@ -1,8 +1,9 @@
 import MiniPost from "@/components/post/miniPost"
+import { ProtectedRoute } from "@/components/protectedRoute"
 import Post from "@/types/post"
 import useAxios from "axios-hooks"
 
-export default function Miniposts() {
+function Miniposts() {
     const [{ data, loading, error }, refetch] = useAxios(
         `${(process.env.NEXT_PUBLIC_SERVER_URL) as string}/posts`
     )
@@ -17,3 +18,5 @@ export default function Miniposts() {
     </div>
   )
 }
+
+export default ProtectedRoute(Miniposts);

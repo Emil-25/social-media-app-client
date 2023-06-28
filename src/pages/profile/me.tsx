@@ -1,8 +1,9 @@
 import Profile from "@/components/profile/profile";
+import { ProtectedRoute } from "@/components/protectedRoute";
 import { UserContext } from "@/context/userContext";
 import { useContext, useEffect } from "react";
 
-export default function Me() {
+function Me() {
     const [user, setUser] = useContext(UserContext)
 
   return (
@@ -11,3 +12,5 @@ export default function Me() {
     </div>
   )
 }
+
+export default ProtectedRoute(Me);

@@ -1,10 +1,10 @@
 import Post from "@/components/post/post";
+import { ProtectedRoute } from "@/components/protectedRoute";
 import useAxios from "axios-hooks";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 
-export default function PostPage() {
+function PostPage() {
     const router = useRouter();
     const postId:any = router.query.postId;
     const [{ data, loading, error }, refetch] = useAxios(
@@ -19,3 +19,5 @@ export default function PostPage() {
     </div>
   )
 }
+
+export default ProtectedRoute(PostPage);

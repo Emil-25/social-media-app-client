@@ -32,7 +32,7 @@ export const LoggedRoute = (Component: FC<any>) => {
         if (loading) return <span className="loading loading-bars loading-lg"></span>
         if (error) return <Component data={data} />
 
-        if (!!data && !!data.userWithOutPassword) router.push('/')
+        if (data && data.userWithoutPassword) router.push('/')
 
         return !!data ? null : <Component data={data} />; // Render whatever you want while the authentication occurs
     };
