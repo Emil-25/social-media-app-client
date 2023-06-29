@@ -1,10 +1,8 @@
-import SignUp from "@/components/auth/signup";
-import { LoggedRoute } from "@/components/protectedRoute";
+import SignUp from '@/components/auth/signup';
+import { LoggedRoute } from '@/components/protectedRoute';
 
 function Signup() {
-  return (
-    <SignUp />
-  )
+  return <SignUp />;
 }
 
-export default LoggedRoute(Signup)
+export default LoggedRoute(Signup);

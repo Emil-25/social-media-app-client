@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export default function useTheme(defaultTheme: string) {
-    const [theme, setTheme] = useState(defaultTheme)
+  const [theme, setTheme] = useState(defaultTheme);
 
-    const handleTheme = () => {
-        document.getElementsByTagName('html')[0].setAttribute('data-theme', theme)
-    }
+  const handleTheme = () => {
+    document.getElementsByTagName('html')[0].setAttribute('data-theme', theme);
+  };
 
-    useEffect(() => {
-        handleTheme()
-    },[theme])
+  useEffect(() => {
+    handleTheme();
+  }, [theme]);
 
-    return [theme, setTheme] as const
+  return [theme, setTheme] as const;
 }
