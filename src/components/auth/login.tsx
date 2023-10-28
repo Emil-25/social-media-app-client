@@ -74,7 +74,7 @@ export default function LogIn() {
               Login to LimeLink!
             </h2>
             <p className="text-white">
-              If you don't have an account,{' '}
+              If you don&apos;t have an account, {" "}
               <Link href="/signup" className="text-primary">
                 Signup
               </Link>

@@ -17,3 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
     </ProvidersWrapper>
   );
 }
+
+App.getInitialProps = async () => {
+    return {  }
+  }

@@ -1,5 +1,11 @@
 import { RefObject, useEffect, useState } from 'react';
 
+interface IntersectionObserverInit {
+    root?: Element | Document | null;
+    rootMargin?: string;
+    threshold?: number | number[];
+}
+
 interface Args extends IntersectionObserverInit {
   freezeOnceVisible?: boolean;
 }

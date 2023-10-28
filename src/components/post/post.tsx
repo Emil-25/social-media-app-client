@@ -10,7 +10,7 @@ interface IProps {
   post: Post;
 }
 
-export default function Post(props: IProps) {
+export default function PostComponent(props: IProps) {
   const [isHidden, toggleIsHidden, setIsHidden] = useToggle(true);
   const post = useRef<HTMLDivElement>(null);
   const height = post.current?.offsetHeight;

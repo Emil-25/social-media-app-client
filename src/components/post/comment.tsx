@@ -12,7 +12,7 @@ interface IProps {
   comment: Comment;
 }
 
-export default function Comment(props: IProps) {
+export default function CommentComponent(props: IProps) {
   const [{ data, loading, error }, refetch] = useAxios(
     `${process.env.NEXT_PUBLIC_SERVER_URL as string}/users/${
       props.comment.userId

@@ -207,7 +207,7 @@ export default function ProfileInfo(props: IProps) {
                 : otherUser.fullName
                 ? otherUser.fullName!.split(' ')[0]
                 : null}
-              's Profile
+              &apos;s Profile
             </h1>
             <div>
               <h2 className="card-title">Fullname:</h2>

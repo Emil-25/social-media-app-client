@@ -34,6 +34,7 @@ const UserContext = createContext<
 ]);
 
 function UserProvider({ children }: any) {
+  const [token, setToken] = useState<string | null>("")
   const [user, setUser] = useState<User>({
     id: null,
     avatar: null,
@@ -46,7 +47,9 @@ function UserProvider({ children }: any) {
 
   if (typeof window !== 'undefined') {
     // Perform localStorage action
-    const token = localStorage.getItem('token');
+    setToken(localStorage.getItem('token'))
+
+  }
 
     if (token) {
       setAuthToken(token);
@@ -84,7 +87,7 @@ function UserProvider({ children }: any) {
         });
       }
     }, [token]);
-  } // End bracket of if up there
+ // End bracket of if up there
   return (
     <UserContext.Provider value={[user, setUser]}>
       {children}
