@@ -34,6 +34,7 @@ const UserContext = createContext<
 ]);
 
 function UserProvider({ children }: any) {
+  const [done, setDone] = useState<boolean>(false)
   const [token, setToken] = useState<string | null>("")
   const [user, setUser] = useState<User>({
     id: null,
@@ -45,9 +46,10 @@ function UserProvider({ children }: any) {
     isOnline: false,
   });
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && localStorage.getItem('token') && !done) {
     // Perform localStorage action
-    setToken(localStorage.getItem('token'))
+        setToken(localStorage.getItem('token'))
+        setDone(true)
 
   }
 
@@ -69,13 +71,14 @@ function UserProvider({ children }: any) {
             isOnline: data.userWithoutPassword.isOnline,
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {console.log(err); localStorage.removeItem('token'); setDone(false)});
     };
 
     useEffect(() => {
       if (token) {
         fetchUser();
       } else {
+        
         setUser({
           id: null,
           avatar: null,
@@ -87,7 +90,7 @@ function UserProvider({ children }: any) {
         });
       }
     }, [token]);
- // End bracket of if up there
+    
   return (
     <UserContext.Provider value={[user, setUser]}>
       {children}

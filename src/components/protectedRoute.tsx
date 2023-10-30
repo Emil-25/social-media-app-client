@@ -5,7 +5,8 @@ import useAxios from 'axios-hooks';
 import User from '../types/user';
 
 export const ProtectedRoute = (Component: FC<any>) => {
-  const AuthenticatedComponent = () => {
+
+    const AuthenticatedComponent = () => {
     const [{ data, loading, error }, refetch] = useAxios(
       `${process.env.NEXT_PUBLIC_SERVER_URL as string}/auth/me`
     );
@@ -13,7 +14,7 @@ export const ProtectedRoute = (Component: FC<any>) => {
 
     if (loading) return <div>Loading!</div>;
 
-    if (error) router.push('/login');
+    if (error) router.push('/login'); 
     if (!data) router.push('/login');
 
     return data ? <Component data={data} /> : null; // Render whatever you want while the authentication occurs
@@ -23,14 +24,14 @@ export const ProtectedRoute = (Component: FC<any>) => {
 };
 
 export const LoggedRoute = (Component: FC<any>) => {
+    
   const AuthenticatedComponent = () => {
     const [{ data, loading, error }, refetch] = useAxios(
       `${process.env.NEXT_PUBLIC_SERVER_URL as string}/auth/me`
     );
     const router = useRouter();
 
-    if (loading)
-      return <span className="loading loading-bars loading-lg"></span>;
+    if (loading) return <span className="loading loading-bars loading-lg"></span>;
     if (error) return <Component data={data} />;
 
     if (data && data.userWithoutPassword) router.push('/');
