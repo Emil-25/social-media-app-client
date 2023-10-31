@@ -7,7 +7,7 @@ export default function ProvidersWrapper({
 }) {
   return (
     <SessionProvider>
-      {children} {/* Our entire app -> has access to NextAuth */}
+      {children}
     </SessionProvider>
   );
 }

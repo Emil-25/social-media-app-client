@@ -1,5 +1,3 @@
-import { MouseEventHandler } from 'react';
-import AddComments from '../components/post/addComment';
 
 type IProps = {
   no: string;
