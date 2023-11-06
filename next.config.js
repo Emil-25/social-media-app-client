@@ -4,7 +4,8 @@ const nextConfig = {
   output: 'standalone',
   env: {
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
-  }
+  },
+  basePath: '',
 };
 
 module.exports = nextConfig;
