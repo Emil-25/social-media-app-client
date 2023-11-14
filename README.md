@@ -19,6 +19,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Higher Order Components were made use of for Protected Routes
 - Deployed via Docker on AWS EC2
 
+## Features
+
+User can:
+
+* share images and videos
+* comment on media
+* like, unlike the media and their comments
+* follow and unfollow other users
+* remove posts
+* change online, offline status
   
 
 ## Getting Started
